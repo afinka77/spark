@@ -3,42 +3,31 @@
  */
 package com.transfers;
 
+import com.google.inject.Injector;
 import com.transfers.api.AccountController;
 import com.transfers.api.CustomerController;
-import com.transfers.repository.AccountRepository;
-import com.transfers.repository.CustomerRepository;
 import com.transfers.service.AccountService;
 import com.transfers.service.CustomerService;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.mybatis.guice.XMLMyBatisModule;
+import org.mybatis.guice.datasource.helper.JdbcHelper;
 import spark.Service;
 
-import java.io.IOException;
-import java.io.Reader;
+import static com.google.inject.Guice.createInjector;
 
 public class TransferApplication {
     private static final int PORT = 8080;
-    private static final String MYBATIS_CONFIG = "mybatis-config.xml";
+    private static Injector injector = createInjector(new XMLMyBatisModule() {
+        @Override
+        protected void initialize() {
+            install(JdbcHelper.HSQLDB_Embedded);
+            bind(AccountService.class);
+            bind(CustomerService.class);
+        }
+    });
 
     public static void main(String[] args) {
-        try {
-            SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-            Reader reader = Resources.getResourceAsReader(MYBATIS_CONFIG);
-            SqlSessionFactory factory = builder.build(reader);
-            SqlSession session = factory.openSession();
-
-
-            AccountRepository accountRepository = session.getMapper(AccountRepository.class);
-            CustomerRepository customerRepository = session.getMapper(CustomerRepository.class);
-            Service spark = Service.ignite().port(PORT);
-            new AccountController(new AccountService(accountRepository)).configure(spark);
-            new CustomerController(new CustomerService(customerRepository)).configure(spark);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Service spark = Service.ignite().port(PORT);
+        injector.getInstance(AccountController.class).configure(spark);
+        injector.getInstance(CustomerController.class).configure(spark);
     }
-
-
 }

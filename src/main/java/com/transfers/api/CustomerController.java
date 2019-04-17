@@ -1,15 +1,13 @@
 package com.transfers.api;
 
+import com.google.inject.Inject;
 import com.transfers.domain.Customer;
 import com.transfers.service.CustomerService;
 import spark.Service;
 
 public class CustomerController extends BaseController<Customer> {
-    private final CustomerService customerService;
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+    @Inject
+    private CustomerService customerService;
 
     @Override
     public void configure(Service spark) {

@@ -1,18 +1,17 @@
 package com.transfers.service;
 
+import com.google.inject.Inject;
 import com.transfers.domain.Customer;
 import com.transfers.repository.CustomerRepository;
+import org.mybatis.guice.transactional.Transactional;
 
 import java.util.List;
 
-
 public class CustomerService {
-    private final CustomerRepository customerRepository;
+    @Inject
+    private CustomerRepository customerRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
-
+    @Transactional
     public List<Customer> getCustomers() {
         return customerRepository.getCustomers();
     }

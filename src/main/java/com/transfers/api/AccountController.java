@@ -1,15 +1,13 @@
 package com.transfers.api;
 
+import com.google.inject.Inject;
 import com.transfers.domain.Account;
 import com.transfers.service.AccountService;
 import spark.Service;
 
 public class AccountController extends BaseController<Account> {
-    private final AccountService accountService;
-
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
+    @Inject
+    private AccountService accountService;
 
     @Override
     public void configure(Service spark) {

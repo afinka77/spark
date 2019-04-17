@@ -1,18 +1,17 @@
 package com.transfers.service;
 
+import com.google.inject.Inject;
 import com.transfers.domain.Account;
 import com.transfers.repository.AccountRepository;
+import org.mybatis.guice.transactional.Transactional;
 
 import java.util.List;
 
-
 public class AccountService {
-    private final AccountRepository accountRepository;
+    @Inject
+    private AccountRepository accountRepository;
 
-    public AccountService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
-
+    @Transactional
     public List<Account> getAccounts() {
         return accountRepository.getAccounts();
     }
