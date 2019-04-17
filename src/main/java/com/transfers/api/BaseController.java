@@ -1,19 +1,24 @@
 package com.transfers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.Inject;
 import spark.Service;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 
 public abstract class BaseController<T> {
     @Inject
     private ObjectMapper mapper;
 
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+
     public String dataToJson(Object data) {
         try {
+            mapper.setDateFormat(dateFormat);
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             StringWriter sw = new StringWriter();
             mapper.writeValue(sw, data);

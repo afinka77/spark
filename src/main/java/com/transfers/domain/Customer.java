@@ -2,15 +2,13 @@ package com.transfers.domain;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.sql.Timestamp;
 
 @Data
 public class Customer {
-    private String id;
-    private LocalDateTime createdOn;
-    private LocalDateTime modifiedOn;
+    private Long id;
+    private Timestamp createdOn;
+    private Timestamp modifiedOn;
     private String name;
     private Account account;
-    private UUID uuid;
 }

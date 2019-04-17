@@ -2,15 +2,16 @@ package com.transfers.domain;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
-public class Account {
+public class Transaction {
     private Long id;
     private Timestamp createdOn;
     private Timestamp modifiedOn;
-    private BigDecimal totalBalance;
-    private BigDecimal reservedBalance;
-    private String name;
+    private LocalDateTime postedOn;
+    private String errorMessage;
+    private Payment payment;
 }
+

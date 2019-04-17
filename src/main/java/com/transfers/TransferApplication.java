@@ -4,10 +4,10 @@
 package com.transfers;
 
 import com.google.inject.Injector;
-import com.transfers.api.AccountController;
 import com.transfers.api.CustomerController;
-import com.transfers.service.AccountService;
+import com.transfers.api.PaymentController;
 import com.transfers.service.CustomerService;
+import com.transfers.service.PaymentService;
 import org.mybatis.guice.XMLMyBatisModule;
 import org.mybatis.guice.datasource.helper.JdbcHelper;
 import spark.Service;
@@ -20,14 +20,14 @@ public class TransferApplication {
         @Override
         protected void initialize() {
             install(JdbcHelper.HSQLDB_Embedded);
-            bind(AccountService.class);
             bind(CustomerService.class);
+            bind(PaymentService.class);
         }
     });
 
     public static void main(String[] args) {
         Service spark = Service.ignite().port(PORT);
-        injector.getInstance(AccountController.class).configure(spark);
         injector.getInstance(CustomerController.class).configure(spark);
+        injector.getInstance(PaymentController.class).configure(spark);
     }
 }
