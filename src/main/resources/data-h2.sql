@@ -31,7 +31,8 @@ create table payment (id identity primary key auto_increment,
                       status varchar2 not null,
                       error_message varchar2,
                       debtor_account_id int not null,
-                      creditor_account_id int not null);
+                      creditor_account_id int not null,
+                      customer_id int not null);
 
 alter table payment
     add foreign key (debtor_account_id)
@@ -39,15 +40,18 @@ alter table payment
 alter table payment
     add foreign key (creditor_account_id)
     references account(id);
+alter table payment
+    add foreign key (customer_id)
+    references customer(id);
 
-insert into payment (id, created_on, modified_on, method, amount,  message, status, error_message, debtor_account_id, creditor_account_id) values
- (-1, now(), now(), 'SEPA', 10.20, 'Uz buta',  'success', null, -2, -1),
- (-2, now(), now(), 'SEPA',  9.00, 'Uz nuoma',  'success', null, -1, -2);
+insert into payment (id, created_on, modified_on, method, amount,  message, status, error_message, debtor_account_id, creditor_account_id, customer_id) values
+ (-1, now(), now(), 'SEPA', 10.20, 'Uz buta',  'SUCCESS', null, -2, -1, -1),
+ (-2, now(), now(), 'SEPA',  9.00, 'Uz nuoma',  'SUCCESS', null, -1, -2, -1);
 
 create table transaction (id identity primary key auto_increment,
                           created_on timestamp default now() not null,
                           modified_on timestamp default now() not null,
-                          posted_on timestamp,
+                          posted_on timestamp default now() not null,
                           error_message varchar2,
                           payment_id int not null);
 alter table transaction

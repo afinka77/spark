@@ -5,8 +5,10 @@ import com.transfers.domain.Customer;
 import com.transfers.repository.CustomerRepository;
 import org.mybatis.guice.transactional.Transactional;
 
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class CustomerService {
     @Inject
     private CustomerRepository customerRepository;

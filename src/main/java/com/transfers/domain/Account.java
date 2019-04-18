@@ -1,5 +1,6 @@
 package com.transfers.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,5 +14,6 @@ public class Account {
     private BigDecimal totalBalance;
     private BigDecimal reservedBalance;
     private String name;
-    private Customer customer;
+    @JsonIgnore
+    private Long customerId;
 }

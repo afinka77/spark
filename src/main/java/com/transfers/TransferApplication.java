@@ -3,31 +3,69 @@
  */
 package com.transfers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.inject.Injector;
+import com.transfers.api.AccountController;
 import com.transfers.api.CustomerController;
 import com.transfers.api.PaymentController;
+import com.transfers.service.AccountService;
 import com.transfers.service.CustomerService;
 import com.transfers.service.PaymentService;
+import com.transfers.service.TransactionPostingService;
+import com.transfers.service.TransactionService;
 import org.mybatis.guice.XMLMyBatisModule;
 import org.mybatis.guice.datasource.helper.JdbcHelper;
 import spark.Service;
 
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.text.SimpleDateFormat;
+
 import static com.google.inject.Guice.createInjector;
 
 public class TransferApplication {
+    public static final String ERROR_RESPONSE = "{\"errorMessage\":\"%s\"}";
+
     private static final int PORT = 8080;
-    private static Injector injector = createInjector(new XMLMyBatisModule() {
-        @Override
-        protected void initialize() {
-            install(JdbcHelper.HSQLDB_Embedded);
-            bind(CustomerService.class);
-            bind(PaymentService.class);
-        }
-    });
+    private static Injector injector = injector();
 
     public static void main(String[] args) {
         Service spark = Service.ignite().port(PORT);
+        registerControllers(spark);
+    }
+
+    private static void registerControllers(Service spark) {
         injector.getInstance(CustomerController.class).configure(spark);
         injector.getInstance(PaymentController.class).configure(spark);
+        injector.getInstance(AccountController.class).configure(spark);
+    }
+
+    private static Injector injector() {
+        return createInjector(new XMLMyBatisModule() {
+            @Override
+            protected void initialize() {
+                install(JdbcHelper.HSQLDB_Embedded);
+                bind(CustomerService.class);
+                bind(PaymentService.class);
+                bind(AccountService.class);
+                bind(TransactionService.class);
+                bind(TransactionPostingService.class);
+                bind(ObjectMapper.class)
+                        .toProvider(ObjectMapperProvider.class)
+                        .in(Singleton.class);
+            }
+        });
+    }
+
+    static class ObjectMapperProvider implements Provider<ObjectMapper> {
+        private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+
+        public ObjectMapper get() {
+            var mapper = new ObjectMapper();
+            mapper.setDateFormat(dateFormat);
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            return mapper;
+        }
     }
 }

@@ -1,20 +1,31 @@
 package com.transfers.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.transfers.domain.enums.PaymentMethod;
+import com.transfers.domain.enums.PaymentStatus;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Data
+@Builder
 public class Payment {
     private Long id;
     private Timestamp createdOn;
     private Timestamp modifiedOn;
-    private String method;
+    private PaymentMethod method;
     private BigDecimal amount;
     private String message;
-    private String status;
-    private String error_message;
-    private Account debtorAccount;
-    private Account creditorAccount;
+    private PaymentStatus status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String errorMessage;
+    @JsonIgnore
+    private Long customerId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String debtorAccountName;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String creditorAccountName;
 }

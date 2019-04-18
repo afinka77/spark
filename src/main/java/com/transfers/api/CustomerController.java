@@ -26,14 +26,5 @@ public class CustomerController extends BaseController<Customer> {
         spark.delete("/customers/:customerId", (req, res) -> {
             return "";
         });
-        spark.post("/customers/:customerId/accounts", (req, res) -> {
-            return "";
-        });
-        spark.put("/customers/:customerId/accounts/:accountId", (req, res) -> {
-            return "";
-        });
-        spark.delete("/customers/:customerId/accounts/:accountId", (req, res) -> {
-            return "";
-        });
     }
 }
