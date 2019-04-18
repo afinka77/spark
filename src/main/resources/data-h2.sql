@@ -1,27 +1,26 @@
+create table customer (id identity primary key auto_increment,
+                       created_on timestamp default now() not null,
+                       modified_on timestamp default now() not null,
+                       name varchar2 not null);
+insert into customer (id, created_on, modified_on, name) values
+  (-1, now(), now(), 'Jonas Jonaitis'),
+  (-2, now(), now(), 'Petras Petraitis');
+
 create table account (id identity primary key auto_increment,
                       created_on timestamp default now() not null,
                       modified_on timestamp default now() not null,
                       total_balance number(10,2) not null,
                       reserved_balance number(10,2) not null,
-                      name varchar2 not null);
+                      name varchar2 not null,
+                      customer_id int not null);
+alter table account
+    add foreign key (customer_id)
+    references customer(id);
 
-insert into account (id, created_on, modified_on, total_balance, reserved_balance, name) values
-  (-1, now(), now(), 100.00, 0.00, 'LT477000000000001'),
-  (-2, now(), now(), 200.00, 0.00, 'LT477000000000002');
+insert into account (id, created_on, modified_on, total_balance, reserved_balance, name, customer_id) values
+  (-1, now(), now(), 100.00, 0.00, 'LT477000000000001', -1),
+  (-2, now(), now(), 200.00, 0.00, 'LT477000000000002', -2);
 
-
-create table customer (id identity primary key auto_increment,
-                       created_on timestamp default now() not null,
-                       modified_on timestamp default now() not null,
-                       name varchar2 not null,
-                       account_id int not null);
-alter table customer
-    add foreign key (account_id)
-    references account(id);
-
-insert into customer (id, created_on, modified_on, name, account_id) values
-  (-1, now(), now(), 'Jonas Jonaitis', -1),
-  (-2, now(), now(), 'Petras Petraitis', -2);
 
 create table payment (id identity primary key auto_increment,
                       created_on timestamp default now() not null,

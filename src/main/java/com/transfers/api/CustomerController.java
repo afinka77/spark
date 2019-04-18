@@ -14,15 +14,26 @@ public class CustomerController extends BaseController<Customer> {
         spark.get("/customers", (req, res) -> {
             return dataToJson(customerService.getCustomers());
         });
-    }
-
-    /*
-    public static void main(String[] args) {
-
-        get("/hello", (req, res)->"Hello, world");
-
-        get("/hello/:name", (req,res)->{
-            return "Hello, "+ req.params(":name");
+        spark.get("/customers/:customerId", (req, res) -> {
+            return dataToJson(customerService.getCustomer(req.params("customerId")));
         });
-    }*/
+        spark.post("/customers", (req, res) -> {
+            return "";
+        });
+        spark.put("/customers/:customerId", (req, res) -> {
+            return "";
+        });
+        spark.delete("/customers/:customerId", (req, res) -> {
+            return "";
+        });
+        spark.post("/customers/:customerId/accounts", (req, res) -> {
+            return "";
+        });
+        spark.put("/customers/:customerId/accounts/:accountId", (req, res) -> {
+            return "";
+        });
+        spark.delete("/customers/:customerId/accounts/:accountId", (req, res) -> {
+            return "";
+        });
+    }
 }

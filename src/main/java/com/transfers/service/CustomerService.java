@@ -15,4 +15,9 @@ public class CustomerService {
     public List<Customer> getCustomers() {
         return customerRepository.getCustomers();
     }
+
+    @Transactional
+    public Customer getCustomer(String customerId) {
+        return customerRepository.getCustomer(Long.valueOf(customerId));
+    }
 }

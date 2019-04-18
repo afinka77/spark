@@ -13,4 +13,5 @@ public class Account {
     private BigDecimal totalBalance;
     private BigDecimal reservedBalance;
     private String name;
+    private Customer customer;
 }
