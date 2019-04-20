@@ -5,6 +5,7 @@ import com.transfers.domain.Transaction;
 import com.transfers.domain.enums.PaymentMethod;
 import com.transfers.domain.enums.PaymentStatus;
 import org.apache.ibatis.session.SqlSession;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-
+@Ignore
 public class TransactionRepositoryTest extends BasicRepositoryTest {
     @Test
     public void insert_paymentId_valueInserted() {

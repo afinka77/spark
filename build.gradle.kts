@@ -5,6 +5,17 @@ plugins {
 
 apply(plugin = "io.freefair.lombok")
 
+tasks.jar {
+    archiveBaseName.set("spark-transfer")
+    manifest {
+        attributes["Main-Class"] = "com.transfers.TransferApplication"
+    }
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}
+
 buildscript {
     dependencies {
         classpath("io.freefair.gradle:lombok-plugin:3.2.0")
