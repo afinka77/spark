@@ -31,6 +31,7 @@ dependencies {
     implementation("com.h2database:h2:1.4.199")
 	
     testImplementation("junit:junit:4.12")
+    testImplementation("org.mockito:mockito-all:1.10.19")
 }
 
 tasks.wrapper {
