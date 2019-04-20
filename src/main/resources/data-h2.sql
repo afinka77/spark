@@ -9,13 +9,13 @@ insert into customer (id, created_on, modified_on, name) values
 create table account (id identity primary key auto_increment,
                       created_on timestamp default now() not null,
                       modified_on timestamp default now() not null,
-                      total_balance number(10,2) not null,
-                      reserved_balance number(10,2) not null,
+                      total_balance number(10,2) default 0 not null,
+                      reserved_balance number(10,2)  default 0 not null,
                       name varchar2 not null,
                       customer_id int not null);
 alter table account
     add foreign key (customer_id)
-    references customer(id);
+    references customer(id) on delete cascade;
 
 insert into account (id, created_on, modified_on, total_balance, reserved_balance, name, customer_id) values
   (-1, now(), now(), 100.00, 0.00, 'LT477000000000001', -1),
@@ -36,13 +36,14 @@ create table payment (id identity primary key auto_increment,
 
 alter table payment
     add foreign key (debtor_account_id)
-    references account(id);
+    references account(id) on delete cascade;
+;
 alter table payment
     add foreign key (creditor_account_id)
-    references account(id);
+    references account(id) on delete cascade;
 alter table payment
     add foreign key (customer_id)
-    references customer(id);
+    references customer(id) on delete cascade;
 
 insert into payment (id, created_on, modified_on, method, amount,  message, status, error_message, debtor_account_id, creditor_account_id, customer_id) values
  (-1, now(), now(), 'SEPA', 10.20, 'Uz buta',  'SUCCESS', null, -2, -1, -1),
@@ -56,7 +57,7 @@ create table transaction (id identity primary key auto_increment,
                           payment_id int not null);
 alter table transaction
     add foreign key (payment_id)
-    references payment(id);
+    references payment(id) on delete cascade;
 
 insert into transaction (id, created_on, modified_on, posted_on, payment_id) values
   (-1, now(), now(), '2019-04-17', -1),
@@ -72,11 +73,11 @@ create table transaction_posting (id identity primary key auto_increment,
 
 alter table transaction_posting
     add foreign key (transaction_id)
-    references transaction(id);
+    references transaction(id) on delete cascade;
 
 alter table transaction_posting
     add foreign key (account_id)
-    references account(id);
+    references account(id) on delete cascade;
 
 insert into transaction_posting (id, created_on, modified_on, transaction_id, account_id, debit, credit) values
   (-1, now(), now(), -1, -2, 10.20,  0.00),

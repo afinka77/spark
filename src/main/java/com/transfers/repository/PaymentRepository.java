@@ -39,7 +39,11 @@ public interface PaymentRepository {
             @Result(property = "creditorAccountName",
                     column = "creditor_account_id",
                     javaType = String.class,
-                    one = @One(select = "com.transfers.repository.AccountRepository.getAccountName"))})
+                    one = @One(select = "com.transfers.repository.AccountRepository.getAccountName")),
+            @Result(property = "transaction",
+                    column = "id",
+                    javaType = Transaction.class,
+                    one = @One(select = "com.transfers.repository.TransactionRepository.getTransactionByPaymentId"))})
     @Select("SELECT * FROM payment WHERE customer_id=#{customerId} and id=#{paymentId}")
     @Options
     Payment getPayment(@Param("customerId") Long customerId, @Param("paymentId") Long paymentId);

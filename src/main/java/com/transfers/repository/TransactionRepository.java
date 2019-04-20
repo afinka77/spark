@@ -20,10 +20,9 @@ public interface TransactionRepository {
     @Results(value = {
             @Result(id = true, property = "id", column = "id"),
             @Result(property = "transactionPostings",
-                    column = "transaction_id",
+                    column = "id",
                     javaType = List.class,
                     many = @Many(select = "com.transfers.repository.TransactionPostingRepository.getTransactionPostings"))})
-
     @Select("SELECT * FROM transaction WHERE payment_id=#{paymentId}")
     Transaction getTransactionByPaymentId(@Param("paymentId") Long paymentId);
 }

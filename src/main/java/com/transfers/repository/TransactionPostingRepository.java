@@ -16,4 +16,7 @@ public interface TransactionPostingRepository {
 
     @Select("SELECT * FROM transaction_posting where transaction_id=#{transactionId}")
     List<TransactionPosting> getTransactionPostings(@Param("transactionId") Long transactionId);
+
+    @Select("SELECT * FROM transaction_posting where account_id=#{accountId}")
+    List<TransactionPosting> getTransactionPostingsByAccount(@Param("accountId") Long accountId);
 }

@@ -15,9 +15,11 @@ public class PaymentController extends BaseController<PaymentDto> {
         spark.get("/customers/:customerId/payments", (req, res) -> {
             return dataToJson(paymentService.getPayments(req.params("customerId")));
         });
+
         spark.get("/customers/:customerId/payments/:paymentId", (req, res) -> {
             return dataToJson(paymentService.getPayment(req.params("customerId"), req.params("paymentId")));
         });
+
         spark.post("/customers/:customerId/payments", (req, res) -> {
             Payment payment = paymentService.createPayment(
                     req.params("customerId"), jsonToData(req.body(), PaymentDto.class));
