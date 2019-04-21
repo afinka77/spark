@@ -47,7 +47,8 @@ alter table payment
 
 insert into payment (id, created_on, modified_on, method, amount,  message, status, error_message, debtor_account_id, creditor_account_id, customer_id) values
  (-1, now(), now(), 'SEPA', 10.20, 'Uz buta',  'SUCCESS', null, -2, -1, -1),
- (-2, now(), now(), 'SEPA',  9.00, 'Uz nuoma',  'SUCCESS', null, -1, -2, -1);
+ (-2, now(), now(), 'SEPA',  9.00, 'Uz nuoma',  'SUCCESS', null, -1, -2, -1),
+ (-3, now(), now(), 'SEPA',  9.00, 'Uz nuoma',  'ERROR', null, -1, -2, -1);
 
 create table transaction (id identity primary key auto_increment,
                           created_on timestamp default now() not null,

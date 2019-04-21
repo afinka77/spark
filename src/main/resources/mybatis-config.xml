@@ -12,7 +12,7 @@
             <dataSource type="POOLED">
                 <property name="driver" value="org.h2.Driver"/>
                 <property name="url"
-                          value="jdbc:h2:mem:spark;LOCK_MODE=1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=runscript from 'classpath:../resources/data-h2.sql'"/>
+                          value="jdbc:h2:mem:spark;LOCK_MODE=1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=runscript from 'classpath:data-h2.sql'"/>
                 <property name="username" value="sa"/>
                 <property name="password" value=""/>
             </dataSource>

@@ -1,38 +1,23 @@
 package com.transfers.repository;
 
-import com.transfers.domain.Payment;
 import com.transfers.domain.Transaction;
-import com.transfers.domain.enums.PaymentMethod;
-import com.transfers.domain.enums.PaymentStatus;
 import org.apache.ibatis.session.SqlSession;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-@Ignore
 public class TransactionRepositoryTest extends BasicRepositoryTest {
     @Test
     public void insert_paymentId_valueInserted() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            PaymentRepository paymentRepository = session.getMapper(PaymentRepository.class);
             TransactionRepository transactionRepository = session.getMapper(TransactionRepository.class);
-            Payment payment = Payment.builder()
-                    .method(PaymentMethod.INTERNAL)
-                    .amount(BigDecimal.TEN)
-                    .message("Some msg")
-                    .status(PaymentStatus.PENDING)
-                    .customerId(-1L)
-                    .build();
-            Long paymentId = paymentRepository.insert(payment,-1L,-2L);
 
-            Long transactionId = transactionRepository.insert(paymentId);
+            Long transactionId = transactionRepository.insert(-3L);
 
             assertNotNull(transactionId);
-            assertNotNull(transactionRepository.getTransactionByPaymentId(paymentId));
+            assertNotNull(transactionRepository.getTransactionByPaymentId(-3L));
         }
     }
 
@@ -44,6 +29,7 @@ public class TransactionRepositoryTest extends BasicRepositoryTest {
             Transaction transaction = transactionRepository.getTransactionByPaymentId(-1L);
 
             assertNotNull(transaction);
+            assertEquals(2, transaction.getTransactionPostings().size());
         }
     }
 

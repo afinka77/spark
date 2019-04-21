@@ -1,11 +1,10 @@
 package com.transfers.repository;
 
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 
 public class BasicRepositoryTest {
     private static final String MYBATIS_CONFIG = "mybatis-config.xml";
@@ -14,8 +13,9 @@ public class BasicRepositoryTest {
     static {
         try {
             SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-            try (Reader reader = Resources.getResourceAsReader(MYBATIS_CONFIG)) {
-                sqlSessionFactory = builder.build(reader);
+            try (InputStream stream = BasicRepositoryTest.class.getClassLoader()
+                    .getResourceAsStream(MYBATIS_CONFIG)) {
+                sqlSessionFactory = builder.build(stream);
             }
         } catch (IOException e) {
             e.printStackTrace();
