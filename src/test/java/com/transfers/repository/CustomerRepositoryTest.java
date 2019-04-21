@@ -54,9 +54,9 @@ public class CustomerRepositoryTest extends BasicRepositoryTest {
                     .name(newName)
                     .build();
 
-            Long id = customerRepository.insert(customer);
+            customerRepository.insert(customer);
 
-            Customer inserted = customerRepository.getCustomer(id);
+            Customer inserted = customerRepository.getCustomer(customer.getId());
             assertNotNull(inserted);
             assertEquals(newName, inserted.getName());
         }

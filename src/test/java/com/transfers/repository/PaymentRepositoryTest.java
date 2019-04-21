@@ -78,10 +78,10 @@ public class PaymentRepositoryTest extends BasicRepositoryTest {
                     .status(PaymentStatus.PENDING)
                     .customerId(-1L)
                     .build();
-            Long paymentId = paymentRepository.insert(payment, -1L, -2L);
+            paymentRepository.insert(payment, -1L, -2L);
 
-            assertNotNull(paymentId);
-            assertNotNull(paymentRepository.getPayment(-1L, paymentId));
+            assertNotNull(payment.getId());
+            assertNotNull(paymentRepository.getPayment(-1L, payment.getId()));
         }
     }
 

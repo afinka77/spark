@@ -43,8 +43,8 @@ public class AccountService {
                 .name(accountDto.getName())
                 .customerId(Long.valueOf(customerId))
                 .build();
-        Long accountId = accountRepository.insert(account);
-        return accountRepository.selectAccount(accountId);
+        accountRepository.insert(account);
+        return accountRepository.selectAccount(account.getId());
     }
 
     @Transactional

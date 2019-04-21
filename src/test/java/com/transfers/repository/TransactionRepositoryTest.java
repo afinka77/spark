@@ -13,10 +13,12 @@ public class TransactionRepositoryTest extends BasicRepositoryTest {
     public void insert_paymentId_valueInserted() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             TransactionRepository transactionRepository = session.getMapper(TransactionRepository.class);
+            Transaction transaction = Transaction.builder()
+                    .paymentId(-3L)
+                    .build();
+            transactionRepository.insert(transaction);
 
-            Long transactionId = transactionRepository.insert(-3L);
-
-            assertNotNull(transactionId);
+            assertNotNull(transaction.getId());
             assertNotNull(transactionRepository.getTransactionByPaymentId(-3L));
         }
     }

@@ -7,16 +7,14 @@ import com.transfers.api.dto.AccountDto;
 import com.transfers.domain.Account;
 import com.transfers.domain.Customer;
 import com.transfers.repository.AccountRepository;
-import com.transfers.repository.CustomerRepository;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import spark.HaltException;
 
 import javax.inject.Provider;
-
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -24,10 +22,9 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 public class AccountServiceTest {
-    private Injector injector = getInjector();
-
     private AccountRepository accountRepository = mock(AccountRepository.class);
     private CustomerService customerService = mock(CustomerService.class);
+    private Injector injector = getInjector();
     private AccountService accountService = injector.getInstance(AccountService.class);
 
     @Test
@@ -51,7 +48,7 @@ public class AccountServiceTest {
     @Test
     public void updateBalance_accountIdAndAmount_called() {
         Long accountId = 125L;
-        BigDecimal amount = BigDecimal.valueOf(1234,2);
+        BigDecimal amount = BigDecimal.valueOf(1234, 2);
 
         accountService.updateBalance(accountId, amount);
 
@@ -64,16 +61,12 @@ public class AccountServiceTest {
         String customerId = "12";
         AccountDto accountDto = AccountDto.builder().name(accountName).build();
         when(customerService.getCustomer(customerId)).thenReturn(new Customer());
-        when(accountRepository.insert(any(Account.class))).thenReturn(5L);
-        Account expected = Account.builder()
-                .name(accountName)
-                .customerId(12L)
-                .build();
-        when(accountRepository.selectAccount(5L)).thenReturn(expected);
 
-        Account account = accountService.insertAccount(customerId, accountDto);
+        accountService.insertAccount(customerId, accountDto);
 
-        assertEquals(expected, account);
+        ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
+        verify(accountRepository).insert(captor.capture());
+        assertEquals("Account123", captor.getValue().getName());
     }
 
     @Test(expected = HaltException.class)

@@ -23,12 +23,12 @@ public class TransactionPostingRepositoryTest extends BasicRepositoryTest {
                     .credit(BigDecimal.ZERO)
                     .build();
 
-            Long id = transactionPostingRepository.insert(transactionPosting);
+            transactionPostingRepository.insert(transactionPosting);
 
-            assertNotNull(id);
+            assertNotNull(transactionPosting.getId());
             assertEquals(1, transactionPostingRepository.getTransactionPostings(-1L)
                     .stream()
-                    .filter(t -> t.getId().equals(id))
+                    .filter(t -> t.getId().equals(transactionPosting.getId()))
                     .toArray()
                     .length);
         }

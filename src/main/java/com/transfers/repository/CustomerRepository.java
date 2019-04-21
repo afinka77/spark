@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -28,7 +29,8 @@ public interface CustomerRepository {
     Customer getCustomer(@Param("customerId") Long customerId);
 
     @Insert("INSERT into customer (name) values (#{name})")
-    Long insert(Customer customer);
+    @Options(useGeneratedKeys=true, keyColumn = "id", keyProperty = "id")
+    void insert(Customer customer);
 
     @Update("UPDATE customer SET name=#{name},modified_on=now() where id=#{id}")
     void update(Customer customer);

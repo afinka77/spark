@@ -55,3 +55,8 @@ Execute payment:
 
 PUT http://localhost:8080/customers/-1/payments/1
 
+## Integration test
+Integration test `TransferApplicationIntegrationTest` 
+makes 100 payments 1 EUR each from one account to 4
+different accounts via HTTP client and checks total reserve.
+

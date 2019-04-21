@@ -17,12 +17,10 @@ public class CustomerService {
     @Inject
     private CustomerRepository customerRepository;
 
-    @Transactional
     public List<Customer> getCustomers() {
         return customerRepository.getCustomers();
     }
 
-    @Transactional
     public Customer getCustomer(String customerId) {
         return customerRepository.getCustomer(Long.valueOf(customerId));
     }
@@ -32,8 +30,8 @@ public class CustomerService {
         Customer customer = Customer.builder()
                 .name(customerDto.getName())
                 .build();
-        Long customerId = customerRepository.insert(customer);
-        return customerRepository.getCustomer(customerId);
+        customerRepository.insert(customer);
+        return customerRepository.getCustomer(customer.getId());
     }
 
     @Transactional

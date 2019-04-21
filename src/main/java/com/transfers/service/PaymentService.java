@@ -27,12 +27,10 @@ public class PaymentService {
     @Inject
     private TransactionPostingService transactionPostingService;
 
-    @Transactional
     public List<Payment> getPayments(String customerId) {
         return paymentRepository.getPayments(Long.valueOf(customerId));
     }
 
-    @Transactional
     public Payment getPayment(String customerId, String paymentId) {
         Payment payment = paymentRepository.getPayment(Long.valueOf(customerId), Long.valueOf(paymentId));
         if (payment == null) {
@@ -104,6 +102,7 @@ public class PaymentService {
                 .status(PaymentStatus.PENDING)
                 .customerId(customerId)
                 .build();
-        return paymentRepository.insert(payment, fromAccount.getId(), toAccount.getId());
+        paymentRepository.insert(payment, fromAccount.getId(), toAccount.getId());
+        return payment.getId();
     }
 }

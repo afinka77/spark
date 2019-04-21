@@ -65,7 +65,6 @@ public class PaymentServiceTest {
         Account account = Account.builder().id(2L).customerId(1L).build();
         when(accountService.getAccountByName(paymentDto.getFromAccount())).thenReturn(account);
         when(accountService.getAccountByName(paymentDto.getToAccount())).thenReturn(account);
-        when(paymentRepository.insert(any(Payment.class),eq(2L),eq(2L))).thenReturn(1L);
         when(paymentRepository.getPayment(eq(1L), any())).thenReturn(new Payment());
 
         Payment payment = paymentService.createPayment("1",paymentDto);
@@ -86,7 +85,6 @@ public class PaymentServiceTest {
         Account account = Account.builder().id(2L).customerId(1L).build();
         when(accountService.getAccountByName(paymentDto.getFromAccount())).thenReturn(null);
         when(accountService.getAccountByName(paymentDto.getToAccount())).thenReturn(account);
-        when(paymentRepository.insert(any(Payment.class),eq(2L),eq(2L))).thenReturn(1L);
         when(paymentRepository.getPayment(eq(1L), any())).thenReturn(new Payment());
 
         paymentService.createPayment("1",paymentDto);
@@ -104,7 +102,6 @@ public class PaymentServiceTest {
         Account account = Account.builder().id(2L).customerId(1L).build();
         when(accountService.getAccountByName(paymentDto.getFromAccount())).thenReturn(account);
         when(accountService.getAccountByName(paymentDto.getToAccount())).thenReturn(account);
-        when(paymentRepository.insert(any(Payment.class),eq(2L),eq(2L))).thenReturn(1L);
         when(paymentRepository.getPayment(eq(1L), any())).thenReturn(new Payment());
 
         paymentService.createPayment("2",paymentDto);
@@ -122,7 +119,6 @@ public class PaymentServiceTest {
         Account account = Account.builder().id(2L).customerId(1L).build();
         when(accountService.getAccountByName(paymentDto.getFromAccount())).thenReturn(account);
         when(accountService.getAccountByName(paymentDto.getToAccount())).thenReturn(null);
-        when(paymentRepository.insert(any(Payment.class),eq(2L),eq(2L))).thenReturn(1L);
         when(paymentRepository.getPayment(eq(1L), any())).thenReturn(new Payment());
 
         paymentService.createPayment("1",paymentDto);

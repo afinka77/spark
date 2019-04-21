@@ -1,5 +1,6 @@
 package com.transfers.service;
 
+import com.transfers.domain.Transaction;
 import com.transfers.repository.TransactionRepository;
 
 import javax.inject.Inject;
@@ -11,6 +12,10 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
 
     public Long insertTransaction(Long paymentId){
-        return transactionRepository.insert(paymentId);
+        Transaction transaction = Transaction.builder()
+                .paymentId(paymentId)
+                .build();
+        transactionRepository.insert(transaction);
+        return transaction.getId();
     }
 }

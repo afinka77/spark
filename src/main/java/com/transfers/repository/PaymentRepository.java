@@ -45,13 +45,13 @@ public interface PaymentRepository {
                     javaType = Transaction.class,
                     one = @One(select = "com.transfers.repository.TransactionRepository.getTransactionByPaymentId"))})
     @Select("SELECT * FROM payment WHERE customer_id=#{customerId} and id=#{paymentId}")
-    @Options
     Payment getPayment(@Param("customerId") Long customerId, @Param("paymentId") Long paymentId);
 
     @Insert({"INSERT INTO payment (method, amount,  message, status, error_message,",
             " debtor_account_id, creditor_account_id, customer_id) values",
             " (#{payment.method}, #{payment.amount}, #{payment.message},  #{payment.status}, null, #{toAccountId}, #{fromAccountId}, #{payment.customerId})"})
-    Long insert(@Param("payment") Payment payment,
+    @Options(useGeneratedKeys=true, keyColumn = "id", keyProperty = "payment.id")
+    void insert(@Param("payment") Payment payment,
               @Param("fromAccountId") Long fromAccountId,
               @Param("toAccountId") Long toAccountId);
 

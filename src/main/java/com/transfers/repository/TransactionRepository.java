@@ -4,6 +4,7 @@ import com.transfers.domain.Transaction;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -15,7 +16,8 @@ import java.util.List;
 public interface TransactionRepository {
     @Insert({"INSERT INTO transaction (payment_id)",
             " VALUES (#{paymentId})"})
-    Long insert(@Param("paymentId") Long paymentId);
+    @Options(useGeneratedKeys=true, keyColumn = "id", keyProperty = "id")
+    void insert(Transaction transaction);
 
     @Results(value = {
             @Result(id = true, property = "id", column = "id"),

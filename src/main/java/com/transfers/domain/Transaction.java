@@ -1,5 +1,6 @@
 package com.transfers.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,5 +24,7 @@ public class Transaction {
     private String errorMessage;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<TransactionPosting> transactionPostings;
+    @JsonIgnore
+    private Long paymentId;
 }
 

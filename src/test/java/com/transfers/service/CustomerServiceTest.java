@@ -6,28 +6,25 @@ import com.google.inject.Injector;
 import com.transfers.api.dto.CustomerDto;
 import com.transfers.domain.Customer;
 import com.transfers.repository.CustomerRepository;
-import com.transfers.repository.TransactionRepository;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import spark.HaltException;
 
 import javax.inject.Provider;
-
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 public class CustomerServiceTest {
-    private Injector injector = getInjector();
-
     private CustomerRepository customerRepository = mock(CustomerRepository.class);
+    private Injector injector = getInjector();
     private CustomerService customerService = injector.getInstance(CustomerService.class);
 
     @Test
@@ -54,13 +51,12 @@ public class CustomerServiceTest {
     @Test
     public void insertCustomer_customerDto_inserted() {
         CustomerDto customerDto = CustomerDto.builder().name("Dainius").build();
-        Customer expected = Customer.builder().id(1L).name("Dainius").build();
-        when(customerRepository.getCustomer(1L)).thenReturn(expected);
-        when(customerRepository.insert(any())).thenReturn(1L);
 
-        Customer customer = customerService.insertCustomer(customerDto);
+        customerService.insertCustomer(customerDto);
 
-        assertEquals(expected, customer);
+        ArgumentCaptor<Customer> captor = ArgumentCaptor.forClass(Customer.class);
+        verify(customerRepository).insert(captor.capture());
+        assertEquals("Dainius", captor.getValue().getName());
     }
 
     @Test

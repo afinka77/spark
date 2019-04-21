@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -42,7 +43,8 @@ public interface AccountRepository {
                        @Param("balance") BigDecimal balance);
 
     @Insert("INSERT into account (name, customer_id) values (#{name}, #{customerId})")
-    Long insert(Account account);
+    @Options(useGeneratedKeys=true, keyColumn = "id", keyProperty = "id")
+    void insert(Account account);
 
     @Update("UPDATE account SET name=#{name},customer_id= #{customerId}, modified_on=now() where id=#{id}")
     void update(Account account);
