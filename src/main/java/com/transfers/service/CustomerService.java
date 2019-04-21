@@ -27,6 +27,7 @@ public class CustomerService {
         return customerRepository.getCustomer(Long.valueOf(customerId));
     }
 
+    @Transactional
     public Customer insertCustomer(CustomerDto customerDto) {
         Customer customer = Customer.builder()
                 .name(customerDto.getName())
@@ -35,6 +36,7 @@ public class CustomerService {
         return customerRepository.getCustomer(customerId);
     }
 
+    @Transactional
     public Customer updateCustomer(String pCustomerId, CustomerDto customerDto) {
         Long customerId = Long.valueOf(pCustomerId);
         validateCustomerId(customerId);
@@ -46,6 +48,7 @@ public class CustomerService {
         return customerRepository.getCustomer(customerId);
     }
 
+    @Transactional
     public void deleteCustomer(String pCustomerId) {
         Long customerId = Long.valueOf(pCustomerId);
         validateCustomerId(customerId);

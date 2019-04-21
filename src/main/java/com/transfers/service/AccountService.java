@@ -6,6 +6,7 @@ import com.transfers.domain.Account;
 import com.transfers.domain.Customer;
 import com.transfers.repository.AccountRepository;
 import org.apache.ibatis.annotations.Insert;
+import org.mybatis.guice.transactional.Transactional;
 
 import javax.inject.Singleton;
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ public class AccountService {
         accountRepository.updateBalance(accountId, balance);
     }
 
+    @Transactional
     public Account insertAccount(String customerId, AccountDto accountDto) {
         Customer selected = customerService.getCustomer(customerId);
         if (selected == null) {
@@ -45,6 +47,7 @@ public class AccountService {
         return accountRepository.selectAccount(accountId);
     }
 
+    @Transactional
     public Account updateAccount(String pCustomerId, String pAccountId, AccountDto accountDto) {
         Long customerId = Long.valueOf(pCustomerId);
         Long accountId = Long.valueOf(pAccountId);
@@ -58,6 +61,7 @@ public class AccountService {
         return accountRepository.selectAccount(accountId);
     }
 
+    @Transactional
     public void deleteAccount(String pCustomerId, String pAccountId) {
         Long customerId = Long.valueOf(pCustomerId);
         Long accountId = Long.valueOf(pAccountId);
