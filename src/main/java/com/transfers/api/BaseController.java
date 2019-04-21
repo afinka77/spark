@@ -2,15 +2,10 @@ package com.transfers.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import spark.CustomErrorPages;
 import spark.Service;
 
 import java.io.IOException;
 import java.io.StringWriter;
-
-import static spark.Spark.halt;
-import static spark.Spark.internalServerError;
-import static spark.Spark.notFound;
 
 public abstract class BaseController<T> {
     @Inject
