@@ -59,7 +59,8 @@ PUT http://localhost:8080/customers/-1/payments/1
 ## Integration test
 Integration test [TransferApplicationIntegrationTest](https://github.com/afinka77/spark/blob/master/src/test/java/com/transfers/integration/TransferApplicationIntegrationTest.java) 
 Makes 100 payments 1 EUR each from one account to 4 different accounts in parrallel streams.
-All operations ade made via HTTP client. 
-Accounts balances are verified at the very end.
-Integration test is marked as `@Ignored` and should be run separately.
+All operations are made via HTTP client. 
+Accounts balances are verified at the end.
+
+Note: Integration test is marked as `@Ignored` and should be run separately.
 
