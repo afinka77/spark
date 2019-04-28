@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5ab9c543-6a54-4754-82c9-d1b37c6cc4ca",
+		"_postman_id": "83996c34-3495-4d3a-bc30-180f41108420",
 		"name": "Spark",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,15 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:8080/customers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers"
+					]
 				}
 			},
 			"response": []
@@ -101,7 +109,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/customers/-1",
+					"raw": "http://localhost:8080/customers/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -109,7 +117,7 @@
 					"port": "8080",
 					"path": [
 						"customers",
-						"-1"
+						"1"
 					]
 				}
 			},
@@ -150,7 +158,7 @@
 					"raw": "{\n \"name\":\"LT999999999999999\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/customers/-1/accounts",
+					"raw": "http://localhost:8080/customers/-2/accounts",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -158,7 +166,7 @@
 					"port": "8080",
 					"path": [
 						"customers",
-						"-1",
+						"-2",
 						"accounts"
 					]
 				}
@@ -175,7 +183,7 @@
 					"raw": "{\n \"name\":\"LT8888888888888888\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/customers/-1/accounts/1",
+					"raw": "http://localhost:8080/customers/-2/accounts/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -183,7 +191,7 @@
 					"port": "8080",
 					"path": [
 						"customers",
-						"-1",
+						"-2",
 						"accounts",
 						"1"
 					]
@@ -201,7 +209,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/customers/-1/accounts/-1",
+					"raw": "http://localhost:8080/customers/-2/accounts/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -209,9 +217,9 @@
 					"port": "8080",
 					"path": [
 						"customers",
-						"-1",
+						"-2",
 						"accounts",
-						"-1"
+						"1"
 					]
 				}
 			},
@@ -227,7 +235,7 @@
 					"raw": "{\n\"amount\": 0.01,\n\"message\": \"uz pietus\",\n\"fromAccount\":\"LT477000000000001\",\n\"toAccount\":\"LT477000000000002\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/customers/-2/payments",
+					"raw": "http://localhost:8080/customers/-1/payments",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -235,7 +243,7 @@
 					"port": "8080",
 					"path": [
 						"customers",
-						"-2",
+						"-1",
 						"payments"
 					]
 				}
@@ -278,7 +286,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/customers/-1/payments/-1",
+					"raw": "http://localhost:8080/customers/-1/payments/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -288,7 +296,7 @@
 						"customers",
 						"-1",
 						"payments",
-						"-1"
+						"1"
 					]
 				}
 			},

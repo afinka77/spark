@@ -31,7 +31,7 @@ public class TransferApplication {
     private static Injector injector = injector();
 
     public static void main(String[] args) {
-        Service spark = Service.ignite().port(PORT);
+        Service spark = Service.ignite().port(getPort(args));
         registerControllers(spark);
     }
 
@@ -56,6 +56,17 @@ public class TransferApplication {
                         .in(Singleton.class);
             }
         });
+    }
+
+    private static int getPort(String[] args){
+        if (args.length==2 && "-port".equals(args[0])){
+            try {
+                return Integer.parseInt(args[1]);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid value " + args[1] + " for port. Default port will vbe used");
+            }
+        }
+        return PORT;
     }
 
     static class ObjectMapperProvider implements Provider<ObjectMapper> {

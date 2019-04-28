@@ -12,6 +12,8 @@ import org.mybatis.guice.transactional.Transactional;
 import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static com.transfers.TransferApplication.ERROR_RESPONSE;
 import static spark.Spark.halt;
@@ -27,6 +29,8 @@ public class PaymentService {
     @Inject
     private TransactionPostingService transactionPostingService;
 
+    private ReentrantLock reentrantLock = new ReentrantLock(true);
+
     public List<Payment> getPayments(String customerId) {
         return paymentRepository.getPayments(Long.valueOf(customerId));
     }
@@ -39,20 +43,39 @@ public class PaymentService {
         return payment;
     }
 
-    @Transactional
     public Payment createPayment(String pCustomerId, PaymentDto paymentDto) {
-        Long customerId = Long.valueOf(pCustomerId);
-        Long paymentId = validateAndCreatePayment(customerId, paymentDto);
-        return paymentRepository.getPayment(customerId, paymentId);
+        try {
+            reentrantLock.lock();
+            Long customerId = Long.valueOf(pCustomerId);
+            Long paymentId = validateAndCreatePayment(customerId, paymentDto);
+            return paymentRepository.getPayment(customerId, paymentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            halt(500, String.format(ERROR_RESPONSE, e.getMessage()));
+        } finally {
+            if (reentrantLock.isHeldByCurrentThread()) {
+                reentrantLock.unlock();
+            }
+        }
+        return null;
     }
 
-
-    @Transactional
     public Payment executePayment(String pCustomerId, String pPaymentId) {
-        Long customerId = Long.valueOf(pCustomerId);
-        Long paymentId = Long.valueOf(pPaymentId);
-        validateAndExecutePayment(customerId, paymentId);
-        return paymentRepository.getPayment(customerId, paymentId);
+        try {
+            reentrantLock.lock();
+            Long customerId = Long.valueOf(pCustomerId);
+            Long paymentId = Long.valueOf(pPaymentId);
+            validateAndExecutePayment(customerId, paymentId);
+            return paymentRepository.getPayment(customerId, paymentId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            halt(500, String.format(ERROR_RESPONSE, e.getMessage()));
+        } finally {
+            if (reentrantLock.isHeldByCurrentThread()) {
+                reentrantLock.unlock();
+            }
+        }
+        return null;
     }
 
     private void validateAndExecutePayment(Long customerId, Long paymentId) {
@@ -67,8 +90,6 @@ public class PaymentService {
 
         Account creditorAccount = accountService.getAccountByName(payment.getCreditorAccountName());
         Account debtorAccount = accountService.getAccountByName(payment.getDebtorAccountName());
-        accountService.selectForUpdate(creditorAccount.getId());
-        accountService.selectForUpdate(debtorAccount.getId());
         if (creditorAccount.getTotalBalance().compareTo(payment.getAmount()) < 0) {
             halt(422, String.format(ERROR_RESPONSE, "Account balance is not sufficient to execute payment"));
         }

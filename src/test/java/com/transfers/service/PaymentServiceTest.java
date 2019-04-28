@@ -153,8 +153,6 @@ public class PaymentServiceTest {
         Payment returned = paymentService.executePayment("1","2");
 
         assertNotNull(returned);
-        verify(accountService).selectForUpdate(2L);
-        verify(accountService).selectForUpdate(3L);
         verify(transactionService).insertTransaction(2L);
         verify(transactionPostingService).insertTransactionPosting(3L, 3L, BigDecimal.ONE, BigDecimal.ZERO);
         verify(transactionPostingService).insertTransactionPosting(3l, 2L, BigDecimal.ZERO, BigDecimal.ONE);

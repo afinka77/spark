@@ -1,3 +1,4 @@
+drop table if exists customer;
 create table customer (id identity primary key auto_increment,
                        created_on timestamp default now() not null,
                        modified_on timestamp default now() not null,
@@ -6,6 +7,7 @@ insert into customer (id, created_on, modified_on, name) values
   (-1, now(), now(), 'Jonas Jonaitis'),
   (-2, now(), now(), 'Petras Petraitis');
 
+drop table if exists account;
 create table account (id identity primary key auto_increment,
                       created_on timestamp default now() not null,
                       modified_on timestamp default now() not null,
@@ -22,6 +24,7 @@ insert into account (id, created_on, modified_on, total_balance, reserved_balanc
   (-2, now(), now(), 200.00, 0.00, 'LT477000000000002', -2);
 
 
+drop table if exists payment;
 create table payment (id identity primary key auto_increment,
                       created_on timestamp default now() not null,
                       modified_on timestamp default now() not null,
@@ -50,6 +53,7 @@ insert into payment (id, created_on, modified_on, method, amount,  message, stat
  (-2, now(), now(), 'SEPA',  9.00, 'Uz nuoma',  'SUCCESS', null, -1, -2, -1),
  (-3, now(), now(), 'SEPA',  9.00, 'Uz nuoma',  'ERROR', null, -1, -2, -1);
 
+drop table if exists transaction;
 create table transaction (id identity primary key auto_increment,
                           created_on timestamp default now() not null,
                           modified_on timestamp default now() not null,
@@ -64,6 +68,7 @@ insert into transaction (id, created_on, modified_on, posted_on, payment_id) val
   (-1, now(), now(), '2019-04-17', -1),
   (-2, now(), now(), '2019-04-17', -2);
 
+drop table if exists transaction_posting;
 create table transaction_posting (id identity primary key auto_increment,
                                   created_on timestamp default now() not null,
                                   modified_on timestamp default now() not null,

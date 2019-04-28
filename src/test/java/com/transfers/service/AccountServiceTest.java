@@ -39,13 +39,6 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void selectForUpdate_accountId_called() {
-        accountService.selectForUpdate(1L);
-
-        verify(accountRepository).selectForUpdate(1L);
-    }
-
-    @Test
     public void updateBalance_accountIdAndAmount_called() {
         Long accountId = 125L;
         BigDecimal amount = BigDecimal.valueOf(1234, 2);

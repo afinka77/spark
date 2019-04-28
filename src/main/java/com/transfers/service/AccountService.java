@@ -5,7 +5,6 @@ import com.transfers.api.dto.AccountDto;
 import com.transfers.domain.Account;
 import com.transfers.domain.Customer;
 import com.transfers.repository.AccountRepository;
-import org.apache.ibatis.annotations.Insert;
 import org.mybatis.guice.transactional.Transactional;
 
 import javax.inject.Singleton;
@@ -23,10 +22,6 @@ public class AccountService {
 
     public Account getAccountByName(String accountName) {
         return accountRepository.getAccountByName(accountName);
-    }
-
-    public void selectForUpdate(Long accountId) {
-        accountRepository.selectForUpdate(accountId);
     }
 
     public void updateBalance(Long accountId, BigDecimal balance) {
