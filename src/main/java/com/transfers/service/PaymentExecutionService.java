@@ -25,32 +25,6 @@ public class PaymentExecutionService {
     private TransactionPostingService transactionPostingService;
 
     @Transactional
-    public void validateAndExecutePayment(Long customerId, Long paymentId) {
-        Payment payment = paymentRepository.getPayment(customerId, paymentId);
-        if (payment == null) {
-            halt(404, String.format(ERROR_RESPONSE, "Payment not found or do not belong to customer"));
-        }
-
-        if (!payment.getStatus().equals(PaymentStatus.PENDING)) {
-            halt(422, String.format(ERROR_RESPONSE, "Only pending payment can be executed, " +
-                    "this payment's status is " + payment.getStatus()));
-        }
-
-        Account creditorAccount = accountService.getAccountByName(payment.getCreditorAccountName());
-        Account debtorAccount = accountService.getAccountByName(payment.getDebtorAccountName());
-        if (creditorAccount.getTotalBalance().compareTo(payment.getAmount()) < 0) {
-            halt(422, String.format(ERROR_RESPONSE, "Account balance is not sufficient to execute payment"));
-        }
-
-        Long transactionId = transactionService.insertTransaction(paymentId);
-        transactionPostingService.insertTransactionPosting(transactionId, debtorAccount.getId(), payment.getAmount(), BigDecimal.ZERO);
-        transactionPostingService.insertTransactionPosting(transactionId, creditorAccount.getId(), BigDecimal.ZERO, payment.getAmount());
-        accountService.updateBalance(creditorAccount.getId(), creditorAccount.getTotalBalance().subtract(payment.getAmount()));
-        accountService.updateBalance(debtorAccount.getId(), debtorAccount.getTotalBalance().add(payment.getAmount()));
-        paymentRepository.updateStatus(paymentId, PaymentStatus.SUCCESS, null);
-    }
-
-    @Transactional
     public Long validateAndCreatePayment(Long customerId, PaymentDto paymentDto) {
         Account fromAccount = accountService.getAccountByName(paymentDto.getFromAccount());
         if (fromAccount == null) {
@@ -77,5 +51,31 @@ public class PaymentExecutionService {
                 .build();
         paymentRepository.insert(payment, fromAccount.getId(), toAccount.getId());
         return payment.getId();
+    }
+
+    @Transactional
+    public void validateAndExecutePayment(Long customerId, Long paymentId) {
+        Payment payment = paymentRepository.getPayment(customerId, paymentId);
+        if (payment == null) {
+            halt(404, String.format(ERROR_RESPONSE, "Payment not found or do not belong to customer"));
+        }
+
+        if (!payment.getStatus().equals(PaymentStatus.PENDING)) {
+            halt(422, String.format(ERROR_RESPONSE, "Only pending payment can be executed, " +
+                    "this payment's status is " + payment.getStatus()));
+        }
+
+        Account creditorAccount = accountService.getAccountByName(payment.getCreditorAccountName());
+        Account debtorAccount = accountService.getAccountByName(payment.getDebtorAccountName());
+        if (creditorAccount.getTotalBalance().compareTo(payment.getAmount()) < 0) {
+            halt(422, String.format(ERROR_RESPONSE, "Account balance is not sufficient to execute payment"));
+        }
+
+        Long transactionId = transactionService.insertTransaction(paymentId);
+        transactionPostingService.insertTransactionPosting(transactionId, debtorAccount.getId(), payment.getAmount(), BigDecimal.ZERO);
+        transactionPostingService.insertTransactionPosting(transactionId, creditorAccount.getId(), BigDecimal.ZERO, payment.getAmount());
+        accountService.updateBalance(creditorAccount.getId(), creditorAccount.getTotalBalance().subtract(payment.getAmount()));
+        accountService.updateBalance(debtorAccount.getId(), debtorAccount.getTotalBalance().add(payment.getAmount()));
+        paymentRepository.updateStatus(paymentId, PaymentStatus.SUCCESS, null);
     }
 }
