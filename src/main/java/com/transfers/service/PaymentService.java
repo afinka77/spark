@@ -2,14 +2,10 @@ package com.transfers.service;
 
 import com.google.inject.Inject;
 import com.transfers.api.dto.PaymentDto;
-import com.transfers.domain.Account;
 import com.transfers.domain.Payment;
-import com.transfers.domain.enums.PaymentMethod;
-import com.transfers.domain.enums.PaymentStatus;
 import com.transfers.repository.PaymentRepository;
 
 import javax.inject.Singleton;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,11 +17,7 @@ public class PaymentService {
     @Inject
     private PaymentRepository paymentRepository;
     @Inject
-    private AccountService accountService;
-    @Inject
-    private TransactionService transactionService;
-    @Inject
-    private TransactionPostingService transactionPostingService;
+    private PaymentExecutionService paymentExecutionService;
 
     private ReentrantLock reentrantLock = new ReentrantLock(true);
 
@@ -46,7 +38,7 @@ public class PaymentService {
         try {
             reentrantLock.lock();
             Long customerId = Long.valueOf(pCustomerId);
-            Long paymentId = validateAndCreatePayment(customerId, paymentDto);
+            Long paymentId = paymentExecutionService.validateAndCreatePayment(customerId, paymentDto);
             return paymentRepository.getPayment(customerId, paymentId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +57,7 @@ public class PaymentService {
             reentrantLock.lock();
             Long customerId = Long.valueOf(pCustomerId);
             Long paymentId = Long.valueOf(pPaymentId);
-            validateAndExecutePayment(customerId, paymentId);
+            paymentExecutionService.validateAndExecutePayment(customerId, paymentId);
             return paymentRepository.getPayment(customerId, paymentId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,58 +69,5 @@ public class PaymentService {
         }
 
         return null;
-    }
-
-    private void validateAndExecutePayment(Long customerId, Long paymentId) {
-        Payment payment = paymentRepository.getPayment(customerId, paymentId);
-        if (payment == null) {
-            halt(404, String.format(ERROR_RESPONSE, "Payment not found or do not belong to customer"));
-        }
-
-        if (!payment.getStatus().equals(PaymentStatus.PENDING)) {
-            halt(422, String.format(ERROR_RESPONSE, "Only pending payment can be executed, " +
-                    "this payment's status is " + payment.getStatus()));
-        }
-
-        Account creditorAccount = accountService.getAccountByName(payment.getCreditorAccountName());
-        Account debtorAccount = accountService.getAccountByName(payment.getDebtorAccountName());
-        if (creditorAccount.getTotalBalance().compareTo(payment.getAmount()) < 0) {
-            halt(422, String.format(ERROR_RESPONSE, "Account balance is not sufficient to execute payment"));
-        }
-
-        Long transactionId = transactionService.insertTransaction(paymentId);
-        transactionPostingService.insertTransactionPosting(transactionId, debtorAccount.getId(), payment.getAmount(), BigDecimal.ZERO);
-        transactionPostingService.insertTransactionPosting(transactionId, creditorAccount.getId(), BigDecimal.ZERO, payment.getAmount());
-        accountService.updateBalance(creditorAccount.getId(), creditorAccount.getTotalBalance().subtract(payment.getAmount()));
-        accountService.updateBalance(debtorAccount.getId(), debtorAccount.getTotalBalance().add(payment.getAmount()));
-        paymentRepository.updateStatus(paymentId, PaymentStatus.SUCCESS, null);
-    }
-
-    private Long validateAndCreatePayment(Long customerId, PaymentDto paymentDto) {
-        Account fromAccount = accountService.getAccountByName(paymentDto.getFromAccount());
-        if (fromAccount == null) {
-            halt(422, String.format(ERROR_RESPONSE, "fromAccount not found"));
-        }
-
-        if (!fromAccount.getCustomerId().equals(customerId)) {
-            halt(451, String.format(ERROR_RESPONSE, "From account do not belong to user"));
-        }
-
-        Account toAccount = accountService.getAccountByName(paymentDto.getToAccount());
-        if (toAccount == null) {
-            halt(422, String.format(ERROR_RESPONSE, "toAccount not found"));
-        }
-
-        PaymentMethod paymentMethod = toAccount.getCustomerId().equals(customerId) ?
-                PaymentMethod.INTERNAL : PaymentMethod.SEPA;
-        Payment payment = Payment.builder()
-                .method(paymentMethod)
-                .amount(paymentDto.getAmount())
-                .message(paymentDto.getMessage())
-                .status(PaymentStatus.PENDING)
-                .customerId(customerId)
-                .build();
-        paymentRepository.insert(payment, fromAccount.getId(), toAccount.getId());
-        return payment.getId();
     }
 }

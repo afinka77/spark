@@ -11,6 +11,7 @@ import com.transfers.api.CustomerController;
 import com.transfers.api.PaymentController;
 import com.transfers.service.AccountService;
 import com.transfers.service.CustomerService;
+import com.transfers.service.PaymentExecutionService;
 import com.transfers.service.PaymentService;
 import com.transfers.service.TransactionPostingService;
 import com.transfers.service.TransactionService;
@@ -48,6 +49,7 @@ public class TransferApplication {
                 install(JdbcHelper.HSQLDB_Embedded);
                 bind(CustomerService.class);
                 bind(PaymentService.class);
+                bind(PaymentExecutionService.class);
                 bind(AccountService.class);
                 bind(TransactionService.class);
                 bind(TransactionPostingService.class);
