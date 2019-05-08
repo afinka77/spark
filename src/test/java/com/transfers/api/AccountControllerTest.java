@@ -33,6 +33,7 @@ public class AccountControllerTest extends BasicControllerTest{
     public void setUp(){
         spark = Service.ignite().port(PORT);
         getInjector().getInstance(AccountController.class).configure(spark);
+        spark.awaitInitialization();
     }
 
     @After

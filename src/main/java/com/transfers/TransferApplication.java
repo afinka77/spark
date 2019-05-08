@@ -34,6 +34,7 @@ public class TransferApplication {
     public static void main(String[] args) {
         Service spark = Service.ignite().port(getPort(args));
         registerControllers(spark);
+        spark.awaitInitialization();
     }
 
     private static void registerControllers(Service spark) {

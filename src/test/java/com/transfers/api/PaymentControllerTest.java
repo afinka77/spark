@@ -38,6 +38,7 @@ public class PaymentControllerTest extends BasicControllerTest {
     public void setUp() {
         spark = Service.ignite().port(PORT);
         getInjector().getInstance(PaymentController.class).configure(spark);
+        spark.awaitInitialization();
     }
 
     @After

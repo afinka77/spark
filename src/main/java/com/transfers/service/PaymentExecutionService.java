@@ -27,6 +27,10 @@ public class PaymentExecutionService {
     @Transactional
     public Long validateAndCreatePayment(Long customerId, PaymentDto paymentDto) {
         Account fromAccount = accountService.getAccountByName(paymentDto.getFromAccount());
+        if (paymentDto.getAmount().compareTo(BigDecimal.ZERO)<=0) {
+            halt(422, String.format(ERROR_RESPONSE, "Amount cannot be zero or negative"));
+        }
+
         if (fromAccount == null) {
             halt(422, String.format(ERROR_RESPONSE, "fromAccount not found"));
         }

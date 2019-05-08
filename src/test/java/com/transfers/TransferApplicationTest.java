@@ -21,12 +21,6 @@ import static org.junit.Assert.assertNotNull;
 public class TransferApplicationTest {
     private static final String PORT = "8731";
 
-    @After
-    public void tearDown() {
-        //spark.stop();
-        //spark.awaitStop();
-    }
-
     @Test
     public void main_run_restAPIIsUp() throws IOException, InterruptedException {
         TransferApplication.main(new String[]{"-port",PORT});

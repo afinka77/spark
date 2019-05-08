@@ -52,6 +52,40 @@ public class PaymentExecutionServiceTest {
     }
 
     @Test(expected = HaltException.class)
+    public void validateAndCreatePayment_zeroAmount_halt() {
+        PaymentDto paymentDto = PaymentDto.builder()
+                .fromAccount("FROM")
+                .toAccount("TO")
+                .amount(BigDecimal.ZERO)
+                .build();
+        Account account = Account.builder().id(2L).customerId(1L).build();
+        when(accountService.getAccountByName(paymentDto.getFromAccount())).thenReturn(account);
+        when(accountService.getAccountByName(paymentDto.getToAccount())).thenReturn(account);
+        when(paymentRepository.getPayment(eq(1L), any())).thenReturn(new Payment());
+
+        paymentExecutionService.validateAndCreatePayment(1L, paymentDto);
+
+        verifyZeroInteractions(paymentRepository);
+    }
+
+    @Test(expected = HaltException.class)
+    public void validateAndCreatePayment_negativeAmount_halt() {
+        PaymentDto paymentDto = PaymentDto.builder()
+                .fromAccount("FROM")
+                .toAccount("TO")
+                .amount(BigDecimal.valueOf(-1000,2))
+                .build();
+        Account account = Account.builder().id(2L).customerId(1L).build();
+        when(accountService.getAccountByName(paymentDto.getFromAccount())).thenReturn(account);
+        when(accountService.getAccountByName(paymentDto.getToAccount())).thenReturn(account);
+        when(paymentRepository.getPayment(eq(1L), any())).thenReturn(new Payment());
+
+        paymentExecutionService.validateAndCreatePayment(1L, paymentDto);
+
+        verifyZeroInteractions(paymentRepository);
+    }
+
+    @Test(expected = HaltException.class)
     public void validateAndCreatePayment_fromAccountNotFound_halt() {
         PaymentDto paymentDto = PaymentDto.builder()
                 .fromAccount("FROM")

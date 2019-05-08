@@ -35,6 +35,7 @@ public class CustomerControllerTest extends BasicControllerTest {
     public void setUp() {
         spark = Service.ignite().port(PORT);
         getInjector().getInstance(CustomerController.class).configure(spark);
+        spark.awaitInitialization();
     }
 
     @After
