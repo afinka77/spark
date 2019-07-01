@@ -53,6 +53,7 @@ public class TransferApplicationIntegrationTest {
         paymentController.configure(spark);
         accountController = injector.getInstance(AccountController.class);
         accountController.configure(spark);
+        spark.awaitInitialization();
     }
 
     @After
